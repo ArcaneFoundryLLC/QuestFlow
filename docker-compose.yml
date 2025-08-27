@@ -1,0 +1,13 @@
+services:
+  questflow:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    # Auto-restart on file changes
+    restart: unless-stopped

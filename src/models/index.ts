@@ -101,3 +101,17 @@ export {
   type ValidationResult,
   type ValidationError,
 } from './validation';
+
+// Storage management
+export {
+  StorageManager,
+  StorageMigrator,
+  StorageError,
+  StorageQuotaError,
+  StorageCorruptionError,
+  createStorageManager,
+  STORAGE_KEYS,
+  STORAGE_VERSION,
+  type IStorageManager,
+  type StorageInfo,
+} from './storage';

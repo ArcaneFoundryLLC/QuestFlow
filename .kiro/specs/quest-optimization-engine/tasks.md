@@ -6,7 +6,7 @@
   - Write unit tests for all data model validation scenarios
   - _Requirements: 1.2, 1.3, 5.1_
 
-- [ ] 2. Implement static reward tables and queue definitions
+- [x] 2. Implement static reward tables and queue definitions
   - Create comprehensive MTGA queue reward data structure
   - Define QueueType enum and QueueRewards interfaces
   - Implement reward lookup functions with fallback handling

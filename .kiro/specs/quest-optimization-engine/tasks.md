@@ -13,7 +13,7 @@
   - Write tests for reward calculations with known MTGA values
   - _Requirements: 5.1, 5.2_
 
-- [ ] 3. Build EV calculation engine
+- [x] 3. Build EV calculation engine
   - Implement core EV formula: P(win)×reward_win + (1-P)×reward_loss - entry_cost
   - Create quest progress rate calculator for different quest types and queues
   - Build completion time estimator based on win rates and queue characteristics

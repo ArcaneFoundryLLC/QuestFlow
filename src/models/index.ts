@@ -50,6 +50,22 @@ export {
   type UpdateSettingsInput,
 } from './settings';
 
+// EV Calculator
+export {
+  EVCalculationInputSchema,
+  EVResultSchema,
+  QuestProgressResultSchema,
+  calculateQueueEV,
+  calculateQuestProgressRate,
+  estimateQuestCompletion,
+  calculateCombinedEV,
+  compareQueuesForQuest,
+  validateEVInput,
+  type EVCalculationInput,
+  type EVResult,
+  type QuestProgressResult,
+} from './ev-calculator';
+
 // Validation utilities
 export {
   validateQuest,

@@ -59,7 +59,7 @@
   - Write integration tests for real-time updates
   - _Requirements: 1.5, 3.1, 3.2, 3.4_
 
-- [ ] 9. Build settings panel component
+- [x] 9. Build settings panel component
   - Create collapsible SettingsPanel with win rate adjustment
   - Implement queue preference toggles (enable/disable specific queues)
   - Add default time estimates configuration

@@ -9,6 +9,9 @@ export type { QuestInputFormProps } from './QuestInputForm';
 export { default as PlanDisplay } from './PlanDisplay';
 export type { PlanDisplayProps } from './PlanDisplay';
 
+export { default as SettingsPanel } from './SettingsPanel';
+export type { SettingsPanelProps } from './SettingsPanel';
+
 // Main application
 export { default as QuestFlowApp } from './QuestFlowApp';
 export type { QuestFlowAppProps } from './QuestFlowApp';

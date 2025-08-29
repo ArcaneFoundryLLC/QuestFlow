@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { QuestInputForm } from './QuestInputForm';
 import { PlanDisplay } from './PlanDisplay';
+import { SettingsPanel } from './SettingsPanel';
 import { Card } from './atoms';
 import { cn } from '@/utils/cn';
 import { 
@@ -33,6 +34,7 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
   // UI state
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [lastErrorMessage, setLastErrorMessage] = useState<string | null>(null);
+  const [isSettingsCollapsed, setIsSettingsCollapsed] = useState(true);
 
   // Real-time plan generation with debouncing
   const {
@@ -168,13 +170,23 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
   const handleSettingsChange = useCallback(async (newSettings: UserSettings) => {
     setSettings(newSettings);
     
+    // Update win rate if it changed
+    if (newSettings.defaultWinRate !== settings.defaultWinRate) {
+      setWinRate(newSettings.defaultWinRate * 100);
+    }
+    
     // Save to storage
     try {
       await storageManager.saveSettings(newSettings);
     } catch (error) {
       console.warn('Failed to save settings:', error);
     }
-  }, [storageManager]);
+  }, [settings.defaultWinRate, storageManager]);
+
+  // Settings panel toggle
+  const handleToggleSettings = useCallback(() => {
+    setIsSettingsCollapsed(!isSettingsCollapsed);
+  }, [isSettingsCollapsed]);
 
   // Error handling
   const handleErrorDismiss = useCallback(() => {
@@ -353,6 +365,14 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
         onQuestsChange={handleQuestsChange}
         onTimeBudgetChange={handleTimeBudgetChange}
         onWinRateChange={handleWinRateChange}
+      />
+
+      {/* Settings Panel */}
+      <SettingsPanel
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
+        isCollapsed={isSettingsCollapsed}
+        onToggleCollapse={handleToggleSettings}
       />
 
       {/* Plan Display */}

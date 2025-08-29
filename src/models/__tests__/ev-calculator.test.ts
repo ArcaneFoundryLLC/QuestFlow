@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import {
   calculateQueueEV,
   calculateQuestProgressRate,
@@ -13,43 +14,29 @@ import { Quest, QuestType, MTGAColor } from '../quest';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
-import { describe } from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
-import { describe } from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import { describe } from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import { describe } from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import { describe } from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import test from 'node:test';
-import { describe } from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
-import { describe } from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
 import test from 'node:test';
-import { describe } from 'node:test';
-import { describe } from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
+import test from 'node:test';
 
 describe('EV Calculator', () => {
   // Test quest fixtures
@@ -85,7 +72,7 @@ describe('EV Calculator', () => {
   };
 
   describe('calculateQueueEV', () => {
-    test('calculates correct EV for Standard BO1 with 50% win rate', () => {
+    it('calculates correct EV for Standard BO1 with 50% win rate', () => {
       const result = calculateQueueEV(QueueType.STANDARD_BO1, 0.5);
       
       expect(result.entryCost).toBe(0);
@@ -96,7 +83,7 @@ describe('EV Calculator', () => {
       expect(result.evPerMinute).toBeGreaterThan(0);
     });
 
-    test('calculates correct EV for Quick Draft with 50% win rate', () => {
+    it('calculates correct EV for Quick Draft with 50% win rate', () => {
       const result = calculateQueueEV(QueueType.QUICK_DRAFT, 0.5);
       
       expect(result.entryCost).toBe(5000);
@@ -106,21 +93,21 @@ describe('EV Calculator', () => {
       expect(result.netValue).toBeLessThan(result.expectedValue); // Has entry cost
     });
 
-    test('handles 0% win rate correctly', () => {
+    it('handles 0% win rate correctly', () => {
       const result = calculateQueueEV(QueueType.STANDARD_BO1, 0);
       
       expect(result.expectedGold).toBe(0); // Should get 0-win reward
       expect(result.evPerMinute).toBeGreaterThanOrEqual(0);
     });
 
-    test('handles 100% win rate correctly', () => {
+    it('handles 100% win rate correctly', () => {
       const result = calculateQueueEV(QueueType.STANDARD_BO1, 1);
       
       expect(result.expectedGold).toBe(250); // Should get max reward (7 wins = 250 gold)
       expect(result.evPerMinute).toBeGreaterThan(0);
     });
 
-    test('EV increases with win rate', () => {
+    it('EV increases with win rate', () => {
       const lowWinRate = calculateQueueEV(QueueType.STANDARD_BO1, 0.3);
       const highWinRate = calculateQueueEV(QueueType.STANDARD_BO1, 0.7);
       

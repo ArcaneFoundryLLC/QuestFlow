@@ -66,6 +66,19 @@ export {
   type QuestProgressResult,
 } from './ev-calculator';
 
+// Plan Optimizer
+export {
+  OptimizationInputSchema,
+  UserSettingsSchema as PlanOptimizerUserSettingsSchema,
+  optimizePlan,
+  createDefaultSettings as createDefaultOptimizerSettings,
+  updatePlanProgress,
+  recalculatePlan,
+  type OptimizationInput,
+  type UserSettings as PlanOptimizerUserSettings,
+  type OptimizationResult,
+} from './plan-optimizer';
+
 // Validation utilities
 export {
   validateQuest,

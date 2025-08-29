@@ -20,7 +20,7 @@
   - Write comprehensive unit tests for all EV calculation scenarios
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 4. Create plan optimization algorithm
+- [x] 4. Create plan optimization algorithm
   - Implement greedy optimization algorithm that prioritizes EV per minute
   - Add quest completion constraint checking (must finish before expiration)
   - Build time budget constraint enforcement

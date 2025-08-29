@@ -1,27 +1,28 @@
 import { QueueType } from '../queue';
 import { OptimizedPlanSchema, CreatePlanSchema, UpdatePlanSchema } from '../plan';
 import { validatePlan, validateCreatePlan, validateUpdatePlan } from '../validation';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
 import { describe } from 'node:test';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
+import { it } from 'node:test';
+import { it } from 'node:test';
 import { describe } from 'node:test';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
-import { it } from 'zod/v4/locales';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
+import { it } from 'node:test';
 import { describe } from 'node:test';
 import { describe } from 'node:test';
+// Jest test imports are global, no need to import
 
 describe('Plan Model Validation', () => {
   const validPlanStep = {

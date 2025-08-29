@@ -97,6 +97,7 @@ export {
   isValidWinRate,
   isValidTimeBudget,
   formatValidationErrors,
+  formatValidationErrorsAsRecord,
   getFieldErrors,
   type ValidationResult,
   type ValidationError,

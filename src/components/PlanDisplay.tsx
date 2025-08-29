@@ -1,9 +1,10 @@
+'use client';
+
 import React, { useState, useCallback } from 'react';
 import { Button, Card } from './atoms';
 import { cn } from '@/utils/cn';
 import {
   OptimizedPlan,
-  PlanStep,
   QuestProgress,
   Rewards,
   QueueType,
@@ -215,6 +216,7 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
       {/* Plan Header with Summary */}
       <Card>
         <div className="flex items-center justify-between mb-4">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
           <h2 className="text-lg font-semibold text-gray-900">Tonight's Plan</h2>
           <div className="text-sm text-gray-500">
             {completedSteps} of {totalSteps} steps completed ({completionPercentage}%)
@@ -413,6 +415,7 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
             <div className="text-green-800">
               <div className="text-lg font-semibold mb-1">🎉 Plan Complete!</div>
               <div className="text-sm">
+                {/* eslint-disable-next-line react/no-unescaped-entities */}
                 You've completed all steps and earned {formatRewards(plan.totalExpectedRewards)}
               </div>
             </div>

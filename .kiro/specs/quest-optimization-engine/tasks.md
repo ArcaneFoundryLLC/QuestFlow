@@ -51,7 +51,7 @@
   - Write tests for plan rendering and step completion interactions
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 8. Implement real-time plan recalculation
+- [x] 8. Implement real-time plan recalculation
   - Connect form inputs to optimization engine with debounced updates
   - Add loading states during plan computation
   - Implement error handling for impossible plans (insufficient time)

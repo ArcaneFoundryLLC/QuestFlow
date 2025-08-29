@@ -189,7 +189,7 @@ export function calculateExpectedGoldReward(queueType: QueueType, winRate: numbe
   // For formats with limited wins (like 7-win formats), calculate expected value
   // using geometric distribution for number of wins before losses
   let expectedReward = 0;
-  let currentWinRate = winRate;
+  const currentWinRate = winRate;
   
   for (let wins = 0; wins < winRewards.length - 1; wins++) {
     const probabilityOfExactlyNWins = wins === 0 

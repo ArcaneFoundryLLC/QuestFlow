@@ -347,13 +347,13 @@ describe('Queue Model Validation', () => {
     it('should handle queue with no rewards gracefully', () => {
       // Mock a queue with empty rewards for testing
       const originalRewards = QUEUE_REWARDS[QueueType.STANDARD_BO1];
-      (QUEUE_REWARDS as any)[QueueType.STANDARD_BO1] = { ...originalRewards, winRewards: [] };
+      (QUEUE_REWARDS as Record<QueueType, QueueRewards>)[QueueType.STANDARD_BO1] = { ...originalRewards, winRewards: [] };
       
       const expectedReward = calculateExpectedGoldReward(QueueType.STANDARD_BO1, 0.5);
       expect(expectedReward).toBe(0);
       
       // Restore original rewards
-      (QUEUE_REWARDS as any)[QueueType.STANDARD_BO1] = originalRewards;
+      (QUEUE_REWARDS as Record<QueueType, QueueRewards>)[QueueType.STANDARD_BO1] = originalRewards;
     });
 
     it('should calculate known values for specific scenarios', () => {

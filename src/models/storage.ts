@@ -46,6 +46,7 @@ export interface IStorageManager {
   loadQuests(): Promise<Quest[]>;
   saveSettings(settings: UserSettings): Promise<void>;
   loadSettings(): Promise<UserSettings>;
+  savePlan(plan: OptimizedPlan): Promise<void>;
   savePlans(plans: OptimizedPlan[]): Promise<void>;
   loadPlans(): Promise<OptimizedPlan[]>;
   clearData(): Promise<void>;
@@ -65,12 +66,28 @@ export interface StorageInfo {
 export class StorageManager implements IStorageManager {
   private readonly maxStorageSize = 1024 * 1024; // 1MB limit
 
-  constructor(private storage: Storage = localStorage) {}
+  constructor(private storage?: Storage) {
+    // Handle SSR by checking if we're in a browser environment
+    if (typeof window !== 'undefined' && !storage) {
+      this.storage = localStorage;
+    }
+  }
+
+  /**
+   * Check if storage is available (handles SSR)
+   */
+  private isStorageReady(): boolean {
+    return !!this.storage;
+  }
 
   /**
    * Save quests to local storage with validation and error handling
    */
   async saveQuests(quests: Quest[]): Promise<void> {
+    if (!this.isStorageReady()) {
+      return;
+    }
+
     try {
       // Validate quests array
       const validatedQuests = StoredQuestsSchema.parse(quests);
@@ -100,6 +117,10 @@ export class StorageManager implements IStorageManager {
    * Load quests from local storage with validation and fallback
    */
   async loadQuests(): Promise<Quest[]> {
+    if (!this.storage) {
+      return [];
+    }
+
     try {
       const stored = this.storage.getItem(STORAGE_KEYS.QUESTS);
       if (!stored) {
@@ -110,7 +131,7 @@ export class StorageManager implements IStorageManager {
       
       // Transform date strings back to Date objects if the data is an array
       if (Array.isArray(parsed)) {
-        const transformedQuests = parsed.map((quest: any) => ({
+        const transformedQuests = parsed.map((quest: Record<string, unknown>) => ({
           ...quest,
           createdAt: quest.createdAt ? new Date(quest.createdAt) : quest.createdAt,
           updatedAt: quest.updatedAt ? new Date(quest.updatedAt) : quest.updatedAt,
@@ -181,6 +202,28 @@ export class StorageManager implements IStorageManager {
   }
 
   /**
+   * Save a single plan to local storage (convenience method)
+   */
+  async savePlan(plan: OptimizedPlan): Promise<void> {
+    try {
+      const existingPlans = await this.loadPlans();
+      
+      // Replace existing plan with same ID or add new one
+      const updatedPlans = existingPlans.filter(p => p.id !== plan.id);
+      updatedPlans.push(plan);
+      
+      // Keep only the most recent 10 plans to avoid storage bloat
+      const sortedPlans = updatedPlans
+        .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+        .slice(0, 10);
+      
+      await this.savePlans(sortedPlans);
+    } catch (error) {
+      throw new StorageError('Failed to save plan', error as Error);
+    }
+  }
+
+  /**
    * Save plans to local storage
    */
   async savePlans(plans: OptimizedPlan[]): Promise<void> {
@@ -223,7 +266,7 @@ export class StorageManager implements IStorageManager {
       
       // Transform date strings back to Date objects if the data is an array
       if (Array.isArray(parsed)) {
-        const transformedPlans = parsed.map((plan: any) => ({
+        const transformedPlans = parsed.map((plan: Record<string, unknown>) => ({
           ...plan,
           createdAt: plan.createdAt ? new Date(plan.createdAt) : plan.createdAt,
           updatedAt: plan.updatedAt ? new Date(plan.updatedAt) : plan.updatedAt,

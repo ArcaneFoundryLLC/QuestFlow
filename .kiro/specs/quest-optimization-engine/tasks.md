@@ -43,7 +43,7 @@
   - Write component tests for all user interactions
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 3.1_
 
-- [ ] 7. Create plan display component
+- [x] 7. Create plan display component
   - Build PlanDisplay component showing ordered steps with queue recommendations
   - Implement step completion checkboxes with progress tracking
   - Add expected rewards summary and total time estimates
@@ -51,7 +51,7 @@
   - Write tests for plan rendering and step completion interactions
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [ ] 8. Implement real-time plan recalculation
+- [x] 8. Implement real-time plan recalculation
   - Connect form inputs to optimization engine with debounced updates
   - Add loading states during plan computation
   - Implement error handling for impossible plans (insufficient time)

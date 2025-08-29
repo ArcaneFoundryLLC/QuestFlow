@@ -159,3 +159,11 @@ export function formatValidationErrors(errors: ValidationError[]): string {
 export function getFieldErrors(errors: ValidationError[], field: string): ValidationError[] {
   return errors.filter(error => error.field === field || error.field.startsWith(`${field}.`));
 }
+
+export function formatValidationErrorsAsRecord(errors: ValidationError[]): Record<string, string> {
+  const errorRecord: Record<string, string> = {};
+  errors.forEach(error => {
+    errorRecord[error.field] = error.message;
+  });
+  return errorRecord;
+}

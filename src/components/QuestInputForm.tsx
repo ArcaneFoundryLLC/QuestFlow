@@ -1,4 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+'use client';
+
+import React, { useState, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Button, Input, Card } from './atoms';
 import { cn } from '@/utils/cn';
@@ -8,19 +10,18 @@ import {
   MTGAColor,
   CreateQuestInput,
   UpdateQuestInput,
-  OptimizedPlan,
   validateCreateQuest,
   validateUpdateQuest,
   isValidWinRate,
   isValidTimeBudget,
-  formatValidationErrors,
+  formatValidationErrorsAsRecord,
 } from '@/models';
 
 export interface QuestInputFormProps {
   initialQuests?: Quest[];
   initialTimeBudget?: number;
   initialWinRate?: number;
-  onPlanGenerate: (plan: OptimizedPlan) => void;
+  onPlanGenerate: () => void;
   onQuestsChange?: (quests: Quest[]) => void;
   onTimeBudgetChange?: (timeBudget: number) => void;
   onWinRateChange?: (winRate: number) => void;
@@ -83,7 +84,7 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
   const [editingQuestId, setEditingQuestId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [isGeneratingPlan] = useState(false);
 
   // Validation helpers
   const validateTimeBudget = useCallback((value: number): string | null => {
@@ -101,7 +102,7 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
   }, []);
 
   // Quest form handlers
-  const handleQuestFormChange = useCallback((field: keyof QuestFormData, value: any) => {
+  const handleQuestFormChange = useCallback((field: keyof QuestFormData, value: string | QuestType | MTGAColor[]) => {
     setQuestForm(prev => ({ ...prev, [field]: value }));
     
     // Clear field-specific errors
@@ -135,7 +136,7 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
     const validation = validateCreateQuest(questData);
     
     if (!validation.success) {
-      const errors = formatValidationErrors(validation.errors || []);
+      const errors = formatValidationErrorsAsRecord(validation.errors || []);
       setFormErrors(errors);
       return false;
     }
@@ -193,7 +194,7 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
 
     const validation = validateUpdateQuest(updateData);
     if (!validation.success) {
-      const errors = formatValidationErrors(validation.errors || []);
+      const errors = formatValidationErrorsAsRecord(validation.errors || []);
       setFormErrors(errors);
       return;
     }
@@ -236,47 +237,10 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
     onWinRateChange?.(value);
   }, [onWinRateChange]);
 
-  // Plan generation
-  const handleGeneratePlan = useCallback(async () => {
-    if (quests.length === 0) return;
-
-    setIsGeneratingPlan(true);
-    try {
-      // Simulate async plan generation with a small delay
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // This would typically call the plan optimizer
-      // For now, we'll create a mock plan structure
-      const mockPlan: OptimizedPlan = {
-        id: uuidv4(),
-        steps: [],
-        totalEstimatedMinutes: timeBudget,
-        totalExpectedRewards: { gold: 0, gems: 0, packs: 0 },
-        questsCompleted: [],
-        timeBudget,
-        winRate: winRate / 100,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-
-      onPlanGenerate(mockPlan);
-    } catch (error) {
-      console.error('Failed to generate plan:', error);
-    } finally {
-      setIsGeneratingPlan(false);
-    }
-  }, [quests, timeBudget, winRate, onPlanGenerate]);
-
-  // Auto-generate plan when inputs change
-  useEffect(() => {
-    if (quests.length > 0) {
-      const timeoutId = setTimeout(() => {
-        handleGeneratePlan();
-      }, 300); // Debounce for 300ms
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [quests, timeBudget, winRate, handleGeneratePlan]);
+  // Plan generation (now handled by parent component)
+  const handleGeneratePlan = useCallback(() => {
+    onPlanGenerate();
+  }, [onPlanGenerate]);
 
   const getWinRateTooltip = (rate: number): string => {
     const closest = Object.keys(WIN_RATE_TOOLTIPS)

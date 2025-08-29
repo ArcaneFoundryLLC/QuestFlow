@@ -16,9 +16,19 @@ export {
   QuestProgressSchema,
   RewardsSchema,
   PlanStepSchema,
+  QueueRewardsSchema,
+  QUEUE_REWARDS,
+  getQueueRewards,
+  getQueueRewardsWithFallback,
+  calculateExpectedGoldReward,
+  calculateExpectedGemReward,
+  calculateExpectedPackReward,
+  getAllQueueTypes,
+  isValidQueueType,
   type QuestProgress,
   type Rewards,
   type PlanStep,
+  type QueueRewards,
 } from './queue';
 
 // Plan models

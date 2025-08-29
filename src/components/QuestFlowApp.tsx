@@ -204,11 +204,11 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
   }, [triggerImmediateGeneration]);
 
   return (
-    <div className={cn('max-w-4xl mx-auto space-y-8', className)}>
+    <div className={cn('max-w-4xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8', className)}>
       {/* App Header */}
-      <div className="text-center py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">QuestFlow</h1>
-        <p className="text-gray-600">
+      <div className="text-center py-4 sm:py-6 lg:py-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">QuestFlow</h1>
+        <p className="text-sm sm:text-base text-gray-600 px-4">
           Optimize your MTGA quest completion for maximum rewards
         </p>
       </div>
@@ -216,9 +216,9 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
       {/* Error Messages */}
       {(planError || lastErrorMessage) && (
         <Card variant="outlined" className="border-red-200 bg-red-50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-5 h-5 text-red-600">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3 flex-1 min-w-0">
+              <div className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -228,18 +228,18 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
                   />
                 </svg>
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-medium text-red-800">
                   Plan Generation Error
                 </h3>
-                <p className="text-sm text-red-700">
+                <p className="text-sm text-red-700 break-words">
                   {planError || lastErrorMessage}
                 </p>
               </div>
             </div>
             <button
               onClick={handleErrorDismiss}
-              className="text-red-600 hover:text-red-800"
+              className="text-red-600 hover:text-red-800 touch-target flex-shrink-0 p-2 -m-2"
               aria-label="Dismiss error"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,9 +258,9 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
       {/* Warning Messages */}
       {warnings.length > 0 && (
         <Card variant="outlined" className="border-yellow-200 bg-yellow-50">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-3">
-              <div className="w-5 h-5 text-yellow-600 mt-0.5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3 flex-1 min-w-0">
+              <div className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -270,20 +270,20 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
                   />
                 </svg>
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-medium text-yellow-800 mb-1">
                   Optimization Warnings
                 </h3>
                 <ul className="text-sm text-yellow-700 space-y-1">
                   {warnings.map((warning, index) => (
-                    <li key={index}>• {warning}</li>
+                    <li key={index} className="break-words">• {warning}</li>
                   ))}
                 </ul>
               </div>
             </div>
             <button
               onClick={handleWarningsDismiss}
-              className="text-yellow-600 hover:text-yellow-800"
+              className="text-yellow-600 hover:text-yellow-800 touch-target flex-shrink-0 p-2 -m-2"
               aria-label="Dismiss warnings"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,9 +387,9 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
 
       {/* Empty State */}
       {!plan && !isLoading && quests.length === 0 && (
-        <Card className="text-center py-12">
+        <Card className="text-center py-8 sm:py-12">
           <div className="text-gray-500">
-            <div className="w-16 h-16 mx-auto mb-4 text-gray-300">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-gray-300">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -399,13 +399,13 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">
               Welcome to QuestFlow
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 mb-4 px-4">
               Add your MTGA daily quests to get started with optimization
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 px-4">
               The app will automatically generate an optimized plan as you add quests and adjust settings
             </p>
           </div>
@@ -413,11 +413,11 @@ export const QuestFlowApp: React.FC<QuestFlowAppProps> = ({ className }) => {
       )}
 
       {/* App Footer */}
-      <div className="text-center py-4 text-sm text-gray-500">
-        <p>
+      <div className="text-center py-4 text-sm text-gray-500 px-4">
+        <p className="break-words">
           QuestFlow helps you maximize your MTGA rewards in minimal time.
           {lastGeneratedAt && (
-            <span className="block mt-1">
+            <span className="block mt-1 text-xs sm:text-sm">
               Last updated: {lastGeneratedAt.toLocaleString()}
             </span>
           )}

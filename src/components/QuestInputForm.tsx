@@ -252,22 +252,23 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
   };
 
   return (
-    <div className={cn('space-y-6', className)}>
+    <div className={cn('space-y-4 sm:space-y-6', className)}>
       {/* Quest List Section */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <h2 className="text-lg font-semibold text-gray-900">Your Quests</h2>
           <Button
             onClick={() => setShowAddForm(true)}
             size="sm"
             disabled={showAddForm}
+            className="w-full sm:w-auto"
           >
             Add Quest
           </Button>
         </div>
 
         {quests.length === 0 && !showAddForm && (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-6 sm:py-8 text-gray-500 px-4">
             <p className="mb-2">No quests added yet</p>
             <p className="text-sm">Add your MTGA daily quests to get started</p>
           </div>
@@ -277,10 +278,10 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
         {quests.map((quest) => (
           <div
             key={quest.id}
-            className="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-3 last:mb-0"
+            className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-200 rounded-lg mb-3 last:mb-0 gap-3"
           >
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
                 <span className="text-sm font-medium text-gray-600">
                   {QUEST_TYPE_OPTIONS.find(opt => opt.value === quest.type)?.label}
                 </span>
@@ -303,17 +304,18 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
                   </div>
                 )}
               </div>
-              <p className="text-gray-900 mb-1">{quest.description}</p>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <p className="text-gray-900 mb-1 break-words">{quest.description}</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-gray-500">
                 <span>{quest.remaining} remaining</span>
                 <span>Expires in {quest.expiresInDays} day{quest.expiresInDays !== 1 ? 's' : ''}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 sm:flex-col sm:gap-1 lg:flex-row lg:gap-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => handleEditQuest(quest.id)}
+                className="flex-1 sm:flex-none"
               >
                 Edit
               </Button>
@@ -321,6 +323,7 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
                 variant="danger"
                 size="sm"
                 onClick={() => handleDeleteQuest(quest.id)}
+                className="flex-1 sm:flex-none"
               >
                 Delete
               </Button>
@@ -346,7 +349,7 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
                     <label
                       key={option.value}
                       className={cn(
-                        'flex items-center p-3 border rounded-lg cursor-pointer transition-colors',
+                        'flex items-center p-3 border rounded-lg cursor-pointer transition-colors touch-manipulation min-h-[44px]',
                         questForm.type === option.value
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200 hover:border-gray-300'
@@ -412,20 +415,21 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Colors Required
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
                     {COLOR_OPTIONS.map((color) => (
                       <button
                         key={color.value}
                         type="button"
                         onClick={() => handleColorToggle(color.value)}
                         className={cn(
-                          'px-3 py-2 text-sm font-medium rounded-lg border transition-colors',
+                          'px-3 py-2 text-sm font-medium rounded-lg border transition-colors touch-manipulation min-h-[44px]',
                           questForm.colors.includes(color.value)
                             ? 'border-primary-500 bg-primary-50 text-primary-700'
                             : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
                         )}
                       >
-                        {color.symbol} {color.label}
+                        <span className="sm:hidden">{color.symbol}</span>
+                        <span className="hidden sm:inline">{color.symbol} {color.label}</span>
                       </button>
                     ))}
                   </div>
@@ -436,16 +440,18 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
               )}
 
               {/* Form Actions */}
-              <div className="flex items-center gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-4">
                 <Button
                   onClick={editingQuestId ? handleUpdateQuest : handleAddQuest}
                   disabled={!questForm.description.trim() || questForm.remaining === ''}
+                  className="flex-1 sm:flex-none"
                 >
                   {editingQuestId ? 'Update Quest' : 'Add Quest'}
                 </Button>
                 <Button
                   variant="secondary"
                   onClick={handleCancelEdit}
+                  className="flex-1 sm:flex-none"
                 >
                   Cancel
                 </Button>
@@ -462,9 +468,9 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
           <div>
             <label 
               htmlFor="time-budget-slider"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-700 mb-3"
             >
-              Available Time: {timeBudget} minutes
+              Available Time: <span className="font-semibold">{timeBudget} minutes</span>
             </label>
             <input
               id="time-budget-slider"
@@ -474,10 +480,11 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
               step="5"
               value={timeBudget}
               onChange={(e) => handleTimeBudgetChange(parseInt(e.target.value, 10))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider touch-manipulation"
+              style={{ minHeight: '44px' }}
               aria-label={`Available Time: ${timeBudget} minutes`}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>15 min</span>
               <span>90 min</span>
               <span>180 min</span>
@@ -496,9 +503,9 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
           <div>
             <label 
               htmlFor="win-rate-slider"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-gray-700 mb-3"
             >
-              Expected Win Rate: {winRate}%
+              Expected Win Rate: <span className="font-semibold">{winRate}%</span>
             </label>
             <input
               id="win-rate-slider"
@@ -508,17 +515,18 @@ export const QuestInputForm: React.FC<QuestInputFormProps> = ({
               step="5"
               value={winRate}
               onChange={(e) => handleWinRateChange(parseInt(e.target.value, 10))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider touch-manipulation"
+              style={{ minHeight: '44px' }}
               aria-label={`Expected Win Rate: ${winRate}%`}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>30%</span>
               <span>50%</span>
               <span>80%</span>
             </div>
           </div>
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
+            <p className="text-sm text-blue-800 break-words">
               <strong>Tip:</strong> {getWinRateTooltip(winRate)}
             </p>
           </div>

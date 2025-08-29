@@ -212,10 +212,10 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
   }
 
   return (
-    <div className={cn('space-y-6', className)}>
+    <div className={cn('space-y-4 sm:space-y-6', className)}>
       {/* Plan Header with Summary */}
       <Card>
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           {/* eslint-disable-next-line react/no-unescaped-entities */}
           <h2 className="text-lg font-semibold text-gray-900">Tonight's Plan</h2>
           <div className="text-sm text-gray-500">
@@ -238,17 +238,17 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{formatDuration(remainingTime)}</div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="text-center p-3 sm:p-4 bg-blue-50 rounded-lg">
+            <div className="text-xl sm:text-2xl font-bold text-blue-600">{formatDuration(remainingTime)}</div>
             <div className="text-sm text-blue-800">Time Remaining</div>
           </div>
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{formatRewards(remainingRewards)}</div>
+          <div className="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
+            <div className="text-lg sm:text-2xl font-bold text-green-600 break-words">{formatRewards(remainingRewards)}</div>
             <div className="text-sm text-green-800">Expected Rewards</div>
           </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">{plan.questsCompleted.length}</div>
+          <div className="text-center p-3 sm:p-4 bg-purple-50 rounded-lg">
+            <div className="text-xl sm:text-2xl font-bold text-purple-600">{plan.questsCompleted.length}</div>
             <div className="text-sm text-purple-800">Quests to Complete</div>
           </div>
         </div>
@@ -273,9 +273,9 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                     : 'border-gray-200 bg-white hover:border-gray-300'
                 )}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3 sm:gap-4">
                   {/* Step Number and Checkbox */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                     <div
                       className={cn(
                         'flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium',
@@ -289,16 +289,17 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                     <button
                       onClick={() => handleStepToggle(step.id)}
                       className={cn(
-                        'w-5 h-5 rounded border-2 flex items-center justify-center transition-colors',
+                        'w-6 h-6 rounded border-2 flex items-center justify-center transition-colors touch-manipulation',
                         isCompleted
                           ? 'border-green-600 bg-green-600'
                           : 'border-gray-300 hover:border-gray-400'
                       )}
+                      style={{ minWidth: '44px', minHeight: '44px' }}
                       aria-label={`Mark step ${index + 1} as ${isCompleted ? 'incomplete' : 'complete'}`}
                     >
                       {isCompleted && (
                         <svg
-                          className="w-3 h-3 text-white"
+                          className="w-4 h-4 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -316,22 +317,22 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
 
                   {/* Step Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-2">
+                      <div className="min-w-0 flex-1">
                         <h4 className={cn(
-                          'font-medium',
+                          'font-medium break-words',
                           isCompleted ? 'text-green-800 line-through' : 'text-gray-900'
                         )}>
                           Play {step.targetGames} game{step.targetGames !== 1 ? 's' : ''} in {queueInfo.name}
                         </h4>
                         <p className={cn(
-                          'text-sm',
+                          'text-sm break-words',
                           isCompleted ? 'text-green-600' : 'text-gray-500'
                         )}>
                           {queueInfo.description}
                         </p>
                       </div>
-                      <div className="text-right">
+                      <div className="text-left sm:text-right flex-shrink-0">
                         <div className={cn(
                           'text-sm font-medium',
                           isCompleted ? 'text-green-700' : 'text-gray-900'
@@ -339,7 +340,7 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                           ~{formatDuration(step.estimatedMinutes)}
                         </div>
                         <div className={cn(
-                          'text-xs',
+                          'text-xs break-words',
                           isCompleted ? 'text-green-600' : 'text-gray-500'
                         )}>
                           {formatRewards(step.expectedRewards)}
@@ -389,8 +390,8 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
         {/* Plan Actions */}
         {completedSteps < totalSteps && (
           <div className="mt-6 pt-4 border-t border-gray-200">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="text-sm text-gray-600 break-words">
                 Next: {QUEUE_DISPLAY_INFO[remainingSteps[0]?.queue]?.name || 'Complete remaining steps'}
               </div>
               <Button
@@ -402,6 +403,7 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                   }
                 }}
                 disabled={remainingSteps.length === 0}
+                className="w-full sm:w-auto"
               >
                 Mark Next Step Complete
               </Button>
@@ -414,7 +416,7 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
           <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg text-center">
             <div className="text-green-800">
               <div className="text-lg font-semibold mb-1">🎉 Plan Complete!</div>
-              <div className="text-sm">
+              <div className="text-sm break-words">
                 {/* eslint-disable-next-line react/no-unescaped-entities */}
                 You've completed all steps and earned {formatRewards(plan.totalExpectedRewards)}
               </div>
@@ -436,7 +438,7 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                 <div
                   key={quest.id}
                   className={cn(
-                    'flex items-center justify-between p-3 rounded-lg border',
+                    'flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border gap-2',
                     isCompleted
                       ? 'border-green-200 bg-green-50'
                       : willBeCompleted
@@ -444,10 +446,10 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                       : 'border-gray-200 bg-gray-50'
                   )}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div
                       className={cn(
-                        'w-3 h-3 rounded-full',
+                        'w-3 h-3 rounded-full flex-shrink-0',
                         isCompleted
                           ? 'bg-green-600'
                           : willBeCompleted
@@ -455,19 +457,19 @@ export const PlanDisplay: React.FC<PlanDisplayProps> = ({
                           : 'bg-gray-400'
                       )}
                     />
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <div className={cn(
-                        'font-medium text-sm',
+                        'font-medium text-sm break-words',
                         isCompleted ? 'text-green-800' : 'text-gray-900'
                       )}>
                         {quest.description}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-500 break-words">
                         {quest.remaining} remaining • Expires in {quest.expiresInDays} day{quest.expiresInDays !== 1 ? 's' : ''}
                       </div>
                     </div>
                   </div>
-                  <div className="text-xs font-medium">
+                  <div className="text-xs font-medium flex-shrink-0">
                     {isCompleted ? (
                       <span className="text-green-700">Completed ✓</span>
                     ) : willBeCompleted ? (

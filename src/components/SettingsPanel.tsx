@@ -108,9 +108,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   return (
     <Card className={cn('transition-all duration-200', className)}>
       {/* Header with collapse toggle */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="w-5 h-5 text-gray-600">
+      <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <div className="w-5 h-5 text-gray-600 flex-shrink-0">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
@@ -139,7 +139,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             variant="ghost"
             size="sm"
             onClick={onToggleCollapse}
-            className="p-2"
+            className="p-2 flex-shrink-0"
+            style={{ minWidth: '44px', minHeight: '44px' }}
             aria-label={isCollapsed ? 'Expand settings' : 'Collapse settings'}
           >
             <svg
@@ -161,14 +162,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
       {/* Settings content */}
       {!isCollapsed && (
-        <div className="p-4 space-y-6">
+        <div className="p-3 sm:p-4 space-y-4 sm:space-y-6">
           {/* Win Rate Section */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-gray-700">
                 Default Win Rate
               </label>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm font-semibold text-gray-500">
                 {Math.round(localSettings.defaultWinRate * 100)}%
               </span>
             </div>
@@ -181,7 +182,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 step="5"
                 value={Math.round(localSettings.defaultWinRate * 100)}
                 onChange={(e) => handleWinRateChange(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider touch-manipulation"
+                style={{ minHeight: '44px' }}
                 aria-label="Default win rate percentage"
               />
               <div className="flex justify-between text-xs text-gray-500">
@@ -191,7 +193,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
             </div>
             
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 break-words">
               Your estimated win rate across all queues. This affects EV calculations and time estimates.
             </p>
           </div>
@@ -216,28 +218,29 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                   <label
                     key={queueType}
                     className={cn(
-                      'flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors',
+                      'flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors touch-manipulation min-h-[44px]',
                       isSelected
                         ? 'border-blue-200 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300',
                       isLastSelected && 'opacity-75 cursor-not-allowed'
                     )}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => !isLastSelected && handleQueueToggle(queueType)}
                         disabled={isLastSelected}
-                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 flex-shrink-0"
+                        style={{ minWidth: '16px', minHeight: '16px' }}
                       />
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-gray-900 break-words">
                         {QUEUE_DISPLAY_NAMES[queueType]}
                       </span>
                     </div>
                     
                     {isLastSelected && (
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 flex-shrink-0">
                         Required
                       </span>
                     )}
@@ -246,7 +249,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               })}
             </div>
             
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 break-words">
               Select which queues to include in optimization. At least one queue must be selected.
             </p>
           </div>
@@ -257,7 +260,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               <label className="text-sm font-medium text-gray-700">
                 Default Minutes Per Game
               </label>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm font-semibold text-gray-500">
                 {localSettings.minutesPerGame} min
               </span>
             </div>
@@ -270,7 +273,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
                 step="1"
                 value={localSettings.minutesPerGame}
                 onChange={(e) => handleMinutesPerGameChange(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider touch-manipulation"
+                style={{ minHeight: '44px' }}
                 aria-label="Default minutes per game"
               />
               <div className="flex justify-between text-xs text-gray-500">
@@ -280,14 +284,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
               </div>
             </div>
             
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 break-words">
               Default time estimate per game. Individual queues may override this based on format.
             </p>
           </div>
 
           {/* Action Buttons (for future use) */}
           {hasUnsavedChanges && (
-            <div className="flex gap-3 pt-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
               <Button
                 variant="secondary"
                 size="sm"

@@ -35,7 +35,7 @@
   - Write tests for storage persistence and retrieval scenarios
   - _Requirements: 4.1, 4.2, 4.3_
 
-- [ ] 6. Build Quest input form component
+- [x] 6. Build Quest input form component
   - Create QuestInputForm component with quest type selection and progress inputs
   - Implement add/edit/delete quest functionality with validation
   - Add time budget slider with real-time plan updates

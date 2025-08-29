@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuestInputForm Demo</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom slider styles */
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Primary color classes for Tailwind */
+        .bg-primary-50 { background-color: #eff6ff; }
+        .bg-primary-600 { background-color: #2563eb; }
+        .bg-primary-700 { background-color: #1d4ed8; }
+        .text-primary-700 { color: #1d4ed8; }
+        .border-primary-500 { border-color: #3b82f6; }
+        .ring-primary-500 { --tw-ring-color: #3b82f6; }
+        .focus\:ring-primary-500:focus { --tw-ring-color: #3b82f6; }
+        .hover\:bg-primary-700:hover { background-color: #1d4ed8; }
+        .focus-visible\:ring-primary-500:focus-visible { --tw-ring-color: #3b82f6; }
+    </style>
+</head>
+<body class="bg-gray-50 p-8">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useCallback, useEffect } = React;
+
+        // Mock data and enums
+        const QuestType = {
+            WIN: 'win',
+            CAST: 'cast',
+            PLAY_COLORS: 'play_colors'
+        };
+
+        const MTGAColor = {
+            WHITE: 'W',
+            BLUE: 'U',
+            BLACK: 'B',
+            RED: 'R',
+            GREEN: 'G'
+        };
+
+        // Simple Button component
+        const Button = ({ children, variant = 'primary', size = 'md', disabled = false, loading = false, onClick, className = '', ...props }) => {
+            const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none';
+            
+            const variants = {
+                primary: 'bg-primary-600 text-white hover:bg-primary-700 focus-visible:ring-primary-500',
+                secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-500',
+                danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
+                ghost: 'hover:bg-gray-100 hover:text-gray-900 focus-visible:ring-gray-500',
+            };
+            
+            const sizes = {
+                sm: 'h-8 px-3 text-sm',
+                md: 'h-10 px-4 py-2',
+                lg: 'h-12 px-6 text-lg',
+            };
+            
+            const isDisabled = disabled || loading;
+            
+            return (
+                <button
+                    className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${isDisabled ? 'opacity-50' : ''} ${className}`}
+                    disabled={isDisabled}
+                    onClick={onClick}
+                    {...props}
+                >
+                    {loading && (
+                        <svg className="mr-2 h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                    )}
+                    {children}
+                </button>
+            );
+        };
+
+        // Simple Input component
+        const Input = ({ label, error, helperText, className = '', ...props }) => {
+            const inputId = `input-${Math.random().toString(36).substr(2, 9)}`;
+            
+            return (
+                <div className="w-full">
+                    {label && (
+                        <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 mb-2">
+                            {label}
+                        </label>
+                    )}
+                    <input
+                        className={`flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 ${error ? 'border-red-500 focus:ring-red-500' : ''} ${className}`}
+                        id={inputId}
+                        {...props}
+                    />
+                    {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+                    {helperText && !error && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
+                </div>
+            );
+        };
+
+        // Simple Card component
+        const Card = ({ children, variant = 'default', className = '', ...props }) => {
+            const variants = {
+                default: 'bg-white border border-gray-200',
+                outlined: 'bg-transparent border-2 border-gray-300',
+                elevated: 'bg-white border border-gray-200 shadow-lg',
+            };
+            
+            return (
+                <div className={`rounded-lg p-6 ${variants[variant]} ${className}`} {...props}>
+                    {children}
+                </div>
+            );
+        };
+
+        // Simplified QuestInputForm Demo
+        const QuestInputFormDemo = () => {
+            const [quests, setQuests] = useState([]);
+            const [timeBudget, setTimeBudget] = useState(60);
+            const [winRate, setWinRate] = useState(50);
+            const [showAddForm, setShowAddForm] = useState(false);
+            const [questForm, setQuestForm] = useState({
+                type: QuestType.WIN,
+                description: '',
+                remaining: '',
+                expiresInDays: '3',
+                colors: []
+            });
+
+            const QUEST_TYPE_OPTIONS = [
+                { value: QuestType.WIN, label: 'Win Games', description: 'Win X games in any format' },
+                { value: QuestType.CAST, label: 'Cast Spells', description: 'Cast X spells of specific colors' },
+                { value: QuestType.PLAY_COLORS, label: 'Play Colors', description: 'Play X games with specific colors' },
+            ];
+
+            const COLOR_OPTIONS = [
+                { value: MTGAColor.WHITE, label: 'White', symbol: 'W', color: 'bg-yellow-100 text-yellow-800' },
+                { value: MTGAColor.BLUE, label: 'Blue', symbol: 'U', color: 'bg-blue-100 text-blue-800' },
+                { value: MTGAColor.BLACK, label: 'Black', symbol: 'B', color: 'bg-gray-100 text-gray-800' },
+                { value: MTGAColor.RED, label: 'Red', symbol: 'R', color: 'bg-red-100 text-red-800' },
+                { value: MTGAColor.GREEN, label: 'Green', symbol: 'G', color: 'bg-green-100 text-green-800' },
+            ];
+
+            const WIN_RATE_TOOLTIPS = {
+                30: 'New player or learning new format',
+                40: 'Casual player with some experience',
+                50: 'Average player (recommended starting point)',
+                60: 'Experienced player with good deck',
+                70: 'Highly skilled player with optimized deck',
+                80: 'Expert player with meta deck',
+            };
+
+            const handleAddQuest = () => {
+                if (!questForm.description.trim() || questForm.remaining === '') return;
+
+                const newQuest = {
+                    id: `quest-${Date.now()}`,
+                    type: questForm.type,
+                    description: questForm.description.trim(),
+                    remaining: parseInt(questForm.remaining, 10),
+                    expiresInDays: parseInt(questForm.expiresInDays, 10),
+                    colors: questForm.colors.length > 0 ? questForm.colors : undefined,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                };
+
+                setQuests([...quests, newQuest]);
+                setQuestForm({
+                    type: QuestType.WIN,
+                    description: '',
+                    remaining: '',
+                    expiresInDays: '3',
+                    colors: []
+                });
+                setShowAddForm(false);
+            };
+
+            const handleDeleteQuest = (questId) => {
+                setQuests(quests.filter(q => q.id !== questId));
+            };
+
+            const handleColorToggle = (color) => {
+                setQuestForm(prev => ({
+                    ...prev,
+                    colors: prev.colors.includes(color)
+                        ? prev.colors.filter(c => c !== color)
+                        : [...prev.colors, color],
+                }));
+            };
+
+            const getWinRateTooltip = (rate) => {
+                const closest = Object.keys(WIN_RATE_TOOLTIPS)
+                    .map(Number)
+                    .reduce((prev, curr) => 
+                        Math.abs(curr - rate) < Math.abs(prev - rate) ? curr : prev
+                    );
+                return WIN_RATE_TOOLTIPS[closest];
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-6">
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold text-gray-900 mb-2">QuestFlow Demo</h1>
+                        <p className="text-gray-600">Interactive Quest Input Form Component</p>
+                    </div>
+
+                    {/* Quest List Section */}
+                    <Card>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-semibold text-gray-900">Your Quests</h2>
+                            <Button
+                                onClick={() => setShowAddForm(true)}
+                                size="sm"
+                                disabled={showAddForm}
+                            >
+                                Add Quest
+                            </Button>
+                        </div>
+
+                        {quests.length === 0 && !showAddForm && (
+                            <div className="text-center py-8 text-gray-500">
+                                <p className="mb-2">No quests added yet</p>
+                                <p className="text-sm">Add your MTGA daily quests to get started</p>
+                            </div>
+                        )}
+
+                        {/* Quest List */}
+                        {quests.map((quest) => (
+                            <div
+                                key={quest.id}
+                                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-3 last:mb-0"
+                            >
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-sm font-medium text-gray-600">
+                                            {QUEST_TYPE_OPTIONS.find(opt => opt.value === quest.type)?.label}
+                                        </span>
+                                        {quest.colors && quest.colors.length > 0 && (
+                                            <div className="flex gap-1">
+                                                {quest.colors.map(color => {
+                                                    const colorOption = COLOR_OPTIONS.find(opt => opt.value === color);
+                                                    return (
+                                                        <span
+                                                            key={color}
+                                                            className={`px-2 py-1 text-xs font-medium rounded ${colorOption?.color}`}
+                                                        >
+                                                            {colorOption?.symbol}
+                                                        </span>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <p className="text-gray-900 mb-1">{quest.description}</p>
+                                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                                        <span>{quest.remaining} remaining</span>
+                                        <span>Expires in {quest.expiresInDays} day{quest.expiresInDays !== 1 ? 's' : ''}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={() => handleDeleteQuest(quest.id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Add Quest Form */}
+                        {showAddForm && (
+                            <Card variant="outlined" className="mt-4">
+                                <h3 className="text-md font-medium text-gray-900 mb-4">Add New Quest</h3>
+                                
+                                <div className="space-y-4">
+                                    {/* Quest Type Selection */}
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Quest Type
+                                        </label>
+                                        <div className="grid grid-cols-1 gap-2">
+                                            {QUEST_TYPE_OPTIONS.map((option) => (
+                                                <label
+                                                    key={option.value}
+                                                    className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                                                        questForm.type === option.value
+                                                            ? 'border-primary-500 bg-primary-50'
+                                                            : 'border-gray-200 hover:border-gray-300'
+                                                    }`}
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="questType"
+                                                        value={option.value}
+                                                        checked={questForm.type === option.value}
+                                                        onChange={(e) => setQuestForm(prev => ({ ...prev, type: e.target.value }))}
+                                                        className="sr-only"
+                                                    />
+                                                    <div>
+                                                        <div className="font-medium text-gray-900">{option.label}</div>
+                                                        <div className="text-sm text-gray-500">{option.description}</div>
+                                                    </div>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Description */}
+                                    <Input
+                                        label="Quest Description"
+                                        value={questForm.description}
+                                        onChange={(e) => setQuestForm(prev => ({ ...prev, description: e.target.value }))}
+                                        placeholder="e.g., Win 5 games"
+                                        maxLength={200}
+                                    />
+
+                                    {/* Remaining Count */}
+                                    <Input
+                                        label="Remaining Count"
+                                        type="number"
+                                        value={questForm.remaining}
+                                        onChange={(e) => setQuestForm(prev => ({ ...prev, remaining: e.target.value }))}
+                                        placeholder="0"
+                                        min="0"
+                                        max="100"
+                                    />
+
+                                    {/* Expiration Days */}
+                                    <Input
+                                        label="Expires in Days"
+                                        type="number"
+                                        value={questForm.expiresInDays}
+                                        onChange={(e) => setQuestForm(prev => ({ ...prev, expiresInDays: e.target.value }))}
+                                        min="0"
+                                        max="7"
+                                        helperText="Number of days until quest expires"
+                                    />
+
+                                    {/* Color Selection */}
+                                    {(questForm.type === QuestType.CAST || questForm.type === QuestType.PLAY_COLORS) && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Colors Required
+                                            </label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {COLOR_OPTIONS.map((color) => (
+                                                    <button
+                                                        key={color.value}
+                                                        type="button"
+                                                        onClick={() => handleColorToggle(color.value)}
+                                                        className={`px-3 py-2 text-sm font-medium rounded-lg border transition-colors ${
+                                                            questForm.colors.includes(color.value)
+                                                                ? 'border-primary-500 bg-primary-50 text-primary-700'
+                                                                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                                                        }`}
+                                                    >
+                                                        {color.symbol} {color.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Form Actions */}
+                                    <div className="flex items-center gap-3 pt-4">
+                                        <Button
+                                            onClick={handleAddQuest}
+                                            disabled={!questForm.description.trim() || questForm.remaining === ''}
+                                        >
+                                            Add Quest
+                                        </Button>
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                setShowAddForm(false);
+                                                setQuestForm({
+                                                    type: QuestType.WIN,
+                                                    description: '',
+                                                    remaining: '',
+                                                    expiresInDays: '3',
+                                                    colors: []
+                                                });
+                                            }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                </div>
+                            </Card>
+                        )}
+                    </Card>
+
+                    {/* Time Budget Section */}
+                    <Card>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Time Budget</h2>
+                        <div className="space-y-4">
+                            <div>
+                                <label 
+                                    htmlFor="time-budget-slider"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Available Time: {timeBudget} minutes
+                                </label>
+                                <input
+                                    id="time-budget-slider"
+                                    type="range"
+                                    min="15"
+                                    max="180"
+                                    step="5"
+                                    value={timeBudget}
+                                    onChange={(e) => setTimeBudget(parseInt(e.target.value, 10))}
+                                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                />
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>15 min</span>
+                                    <span>90 min</span>
+                                    <span>180 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Win Rate Section */}
+                    <Card>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">Win Rate</h2>
+                        <div className="space-y-4">
+                            <div>
+                                <label 
+                                    htmlFor="win-rate-slider"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Expected Win Rate: {winRate}%
+                                </label>
+                                <input
+                                    id="win-rate-slider"
+                                    type="range"
+                                    min="30"
+                                    max="80"
+                                    step="5"
+                                    value={winRate}
+                                    onChange={(e) => setWinRate(parseInt(e.target.value, 10))}
+                                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                />
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>30%</span>
+                                    <span>50%</span>
+                                    <span>80%</span>
+                                </div>
+                            </div>
+                            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p className="text-sm text-blue-800">
+                                    <strong>Tip:</strong> {getWinRateTooltip(winRate)}
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Generate Plan Button */}
+                    {quests.length > 0 && (
+                        <div className="flex justify-center">
+                            <Button
+                                onClick={() => alert(`Plan generated for ${quests.length} quest(s) with ${timeBudget} minutes and ${winRate}% win rate!`)}
+                                size="lg"
+                                className="w-full sm:w-auto"
+                            >
+                                Generate Optimized Plan
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        ReactDOM.render(<QuestInputFormDemo />, document.getElementById('root'));
+    </script>
+</body>
+</html>
